@@ -1,7 +1,6 @@
+#include "Eigen/Dense"
 #include "Surface.h"
 #include <math.h>
-
-#include "Eigen/Dense"
 
 #include <iostream>
 

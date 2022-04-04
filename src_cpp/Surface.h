@@ -1,8 +1,6 @@
-#include "Hittable.h"
-
-#include <iostream>
-
 #include "Eigen/Dense"
+#include "Hittable.h"
+#include <iostream>
 
 using Eigen::Matrix3d;
 using Eigen::Vector3d;
