@@ -1,18 +1,22 @@
 #include "Hittable.h"
-#include "Matrix.h"
 
 #include <iostream>
+
+#include "Eigen/Dense"
+
+using Eigen::Matrix3d;
+using Eigen::Vector3d;
 
 using namespace std;
 
 class Surface {
 public:
-    Vector3 origin;
-    Vector3 vec1;
-    Vector3 vec2;
-    Vector3 normal;
+    Vector3d origin;
+    Vector3d vec1;
+    Vector3d vec2;
+    Vector3d normal;
     Surface() { }
-    Surface(Vector3 origin, Vector3 vec1, Vector3 vec2)
+    Surface(Vector3d origin, Vector3d vec1, Vector3d vec2)
     {
         this->origin = origin;
         this->vec1 = vec1;
@@ -29,12 +33,15 @@ public:
         // if t is <= 0, that means the ray didn't hit the surface (only a ray with negative
         // direction of ours would have hit it)
         if (t > 0) {
-            Matrix3 a = Matrix3(this->vec1, this->vec2, -this->normal).inverse();
-            Vector3 b = (ray.call(t)) - this->origin;
+            Matrix3d a;
+            a << this->vec1[0], this->vec2[0], -this->normal[0], this->vec1[1], this->vec2[1],
+                -this->normal[1], this->vec1[2], this->vec2[2], -this->normal[2];
+            a = a.inverse().eval();
+            Vector3d b = (ray.call(t)) - this->origin;
             // get barycentric coordinates of the point of intersection, by solving linear equation
             // origin + vec1 * lambda + vec2 * mu = point of intersection
-            hit.baryCoords = a.matmul(b);
-            hit.baryCoords.z = t;
+            hit.baryCoords = a * b;
+            hit.baryCoords[2] = t;
             hit.normal = this->normal;
             return true;
         }

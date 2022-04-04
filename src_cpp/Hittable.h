@@ -1,11 +1,14 @@
 #ifndef Hittable_H
 #define Hittable_H
+#include "Eigen/Dense"
 #include "Ray.h"
+
+using Eigen::Vector3d;
 
 class HitRecord {
 public:
-    Vector3 baryCoords;
-    Vector3 normal;
+    Vector3d baryCoords;
+    Vector3d normal;
     HitRecord() { }
 };
 

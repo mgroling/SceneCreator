@@ -1,7 +1,11 @@
 #include "Surface.h"
 #include <math.h>
 
+#include "Eigen/Dense"
+
 #include <iostream>
+
+using Eigen::Vector3d;
 
 using namespace std;
 
@@ -9,7 +13,7 @@ class RectangularSurface : public Hittable {
 public:
     Surface surf;
     RectangularSurface() { }
-    RectangularSurface(Vector3 origin, Vector3 vec1, Vector3 vec2)
+    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2)
     {
         this->surf = Surface(origin, vec1, vec2);
     }
@@ -17,8 +21,8 @@ public:
     bool hit(Ray ray, HitRecord& hit) override
     {
         return this->surf.getBarycentricCoordinates(ray, hit)
-            && !(hit.baryCoords.x < 0 || hit.baryCoords.x > 1 || hit.baryCoords.y < 0
-                || hit.baryCoords.y > 1);
+            && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0
+                || hit.baryCoords[1] > 1);
     }
 };
 
@@ -26,17 +30,17 @@ class D6Dice : public Hittable {
 public:
     RectangularSurface surfs[6];
     D6Dice() { }
-    D6Dice(Vector3 center, float size)
+    D6Dice(Vector3d center, float size)
     {
-        Vector3 vertices[8] = {
-            Vector3(center.x - size / 2, center.y - size / 2, center.z - size / 2),
-            Vector3(center.x + size / 2, center.y - size / 2, center.z - size / 2),
-            Vector3(center.x - size / 2, center.y + size / 2, center.z - size / 2),
-            Vector3(center.x + size / 2, center.y + size / 2, center.z - size / 2),
-            Vector3(center.x - size / 2, center.y - size / 2, center.z + size / 2),
-            Vector3(center.x + size / 2, center.y - size / 2, center.z + size / 2),
-            Vector3(center.x - size / 2, center.y + size / 2, center.z + size / 2),
-            Vector3(center.x + size / 2, center.y + size / 2, center.z + size / 2),
+        Vector3d vertices[8] = {
+            Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),
+            Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] - size / 2),
+            Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] - size / 2),
+            Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] - size / 2),
+            Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] + size / 2),
+            Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] + size / 2),
+            Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] + size / 2),
+            Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] + size / 2),
         };
 
         int surface_groups[6][3]
@@ -54,8 +58,8 @@ public:
         bool any_hit = false;
         for (int i = 0; i < 6; i++) {
             HitRecord temp;
-            if (this->surfs[i].hit(ray, temp) & temp.baryCoords.z < min_t) {
-                min_t = temp.baryCoords.z;
+            if (this->surfs[i].hit(ray, temp) && temp.baryCoords[2] < min_t) {
+                min_t = temp.baryCoords[2];
                 hit = temp;
                 any_hit = true;
             }

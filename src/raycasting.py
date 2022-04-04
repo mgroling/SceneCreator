@@ -22,6 +22,7 @@ class Plane:
         )
 
         a = np.array([self.vec1, self.vec2, -self.normal]).T
+        print(np.linalg.inv(a))
         b = (ray_origin + t * ray_direction) - self.center
         gamma_phi_t = np.matmul(np.linalg.inv(a), b)
         gamma_phi_t[2] = t
@@ -30,14 +31,14 @@ class Plane:
 
 
 if __name__ == "__main__":
-    u = np.array([1, 1, 1])
-    v = np.array([-2, 0, 0])
-    w = np.array([0, -2, 0])
+    u = np.array([0, 0, 0])
+    v = np.array([0, 50, 0])
+    w = np.array([0, 0, 50])
 
     # v, w = v / np.linalg.norm(v), w / np.linalg.norm(w)
 
-    ray_origin = np.array([0, 0, 10])
-    ray_direction = np.array([0, 0, -1])
+    ray_origin = np.array([800, 0, 0])
+    ray_direction = np.array([-400, 199, 200])
     ray_direction = ray_direction / np.linalg.norm(ray_direction)
 
     p = Plane(u, v, w)
@@ -45,12 +46,12 @@ if __name__ == "__main__":
     times = 100000
 
     cur_time = time.time()
-    for i in range(times):
-        p.intersection_usinginverse(np.random.sample((3,)), np.random.sample((3,)))
+    # for i in range(times):
+    #     p.intersection_usinginverse(np.random.sample((3,)), np.random.sample((3,)))
     print("Using inverse:", p.intersection_usinginverse(ray_origin, ray_direction))
     print(time.time() - cur_time)
     cur_time = time.time()
-    for i in range(times):
-        p.intersection(np.random.sample((3,)), np.random.sample((3,)))
+    # for i in range(times):
+    #     p.intersection(np.random.sample((3,)), np.random.sample((3,)))
     print("Other method:", p.intersection(ray_origin, ray_direction))
     print(time.time() - cur_time)
