@@ -17,7 +17,7 @@ public:
         this->surf = Surface(origin, vec1, vec2);
     }
 
-    bool hit(Ray ray, HitRecord& hit) override
+    bool hit(const Ray& ray, HitRecord& hit) override
     {
         return this->surf.getBarycentricCoordinates(ray, hit)
             && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0
@@ -29,7 +29,7 @@ class D6Dice : public Hittable {
 public:
     RectangularSurface surfs[6];
     D6Dice() { }
-    D6Dice(Vector3d center, float size)
+    D6Dice(const Vector3d center, const double size)
     {
         Vector3d vertices[8] = {
             Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),
@@ -51,9 +51,9 @@ public:
         }
     }
 
-    bool hit(Ray ray, HitRecord& hit) override
+    bool hit(const Ray& ray, HitRecord& hit) override
     {
-        float min_t = INFINITY;
+        double min_t = INFINITY;
         bool any_hit = false;
         for (int i = 0; i < 6; i++) {
             HitRecord temp;

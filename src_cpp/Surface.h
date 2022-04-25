@@ -1,5 +1,6 @@
 #include "Eigen/Dense"
 #include "Hittable.h"
+
 #include <iostream>
 
 using Eigen::Matrix3d;
@@ -30,15 +31,14 @@ public:
     {
         // plug parametric equation of the ray into the implicit equation of the surface (plane) and
         // get t
-        float t = -(this->normal.dot(ray.origin - this->origin)) / this->normal.dot(ray.direction);
+        double t = -(this->normal.dot(ray.origin - this->origin)) / this->normal.dot(ray.direction);
 
         // if t is <= 0, that means the ray didn't hit the surface (only a ray with negative
         // direction of ours would have hit it)
         if (t > 0) {
-            Vector3d b = (ray.call(t)) - this->origin;
             // get barycentric coordinates of the point of intersection, by solving linear equation
             // origin + vec1 * lambda + vec2 * mu = point of intersection
-            hit.baryCoords = a * b;
+            hit.baryCoords = a * (ray.call(t) - this->origin);
             hit.baryCoords[2] = t;
             hit.normal = this->normal;
             return true;

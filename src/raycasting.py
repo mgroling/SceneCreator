@@ -22,7 +22,6 @@ class Plane:
         )
 
         a = np.array([self.vec1, self.vec2, -self.normal]).T
-        print(np.linalg.inv(a))
         b = (ray_origin + t * ray_direction) - self.center
         gamma_phi_t = np.matmul(np.linalg.inv(a), b)
         gamma_phi_t[2] = t

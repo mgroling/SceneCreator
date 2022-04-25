@@ -6,11 +6,11 @@ class Ray {
 public:
     Vector3d origin;
     Vector3d direction;
-    Ray(Vector3d ray_origin, Vector3d ray_direction)
+    Ray(const Vector3d ray_origin, const Vector3d ray_direction)
     {
         this->origin = ray_origin;
         this->direction = ray_direction;
     }
 
-    Vector3d call(float t) { return this->origin + this->direction * t; }
+    Vector3d call(double t) { return this->origin + this->direction * t; }
 };
