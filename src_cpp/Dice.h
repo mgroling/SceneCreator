@@ -2,28 +2,7 @@
 #include "Surface.h"
 #include <math.h>
 
-#include <iostream>
-
 using Eigen::Vector3d;
-
-using namespace std;
-
-class RectangularSurface : public Hittable {
-public:
-    Surface surf;
-    RectangularSurface() { }
-    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2)
-    {
-        this->surf = Surface(origin, vec1, vec2);
-    }
-
-    bool hit(const Ray& ray, HitRecord& hit) override
-    {
-        return this->surf.getBarycentricCoordinates(ray, hit)
-            && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0
-                || hit.baryCoords[1] > 1);
-    }
-};
 
 class D6Dice : public Hittable {
 public:

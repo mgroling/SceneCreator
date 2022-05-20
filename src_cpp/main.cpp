@@ -7,7 +7,6 @@
 
 using Eigen::Matrix3d;
 using Eigen::Vector3d;
-using namespace std;
 
 int main()
 {
@@ -25,7 +24,7 @@ int main()
     D6Dice dice = D6Dice(Vector3d(0, 0, 0), 50);
     Hittable* world[] = { &dice };
 
-    ofstream my_file;
+    std::ofstream my_file;
     my_file.open("pic.ppm");
     my_file << "P3\n" << img_width << " " << img_height << "\n255\n";
 
