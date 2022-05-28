@@ -57,6 +57,7 @@ public:
 
     bool hit(const Ray &ray, HitRecord &hit) const override
     {
-        return this->surf.getBarycentricCoordinates(ray, hit) && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0 || hit.baryCoords[1] > 1);
+        return this->surf.getBarycentricCoordinates(ray, hit) &&
+               (hit.baryCoords[0] >= 0 && hit.baryCoords[0] <= 1 && hit.baryCoords[1] >= 0 && hit.baryCoords[1] <= 1);
     }
 };

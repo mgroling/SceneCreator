@@ -11,7 +11,6 @@ class HitRecord
 public:
     Vector3d baryCoords;
     Vector3d normal;
-    std::array<uint8_t, 3> color;
 
     HitRecord() {}
 };

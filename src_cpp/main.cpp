@@ -7,6 +7,7 @@
 #include <thread>
 #include <chrono>
 #include <vector>
+#include <cmath>
 
 using Eigen::Matrix3d;
 using Eigen::Vector3d;
@@ -36,11 +37,33 @@ void work(std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> 
         {
             Ray ray = Ray(pov, (canvas.call(x, y) - pov).normalized());
             HitRecord hit;
-            if (world[0]->hit(ray, hit))
+            double min_t = INFINITY;
+            bool any_hit = false;
+            for (int i = 0; i < world.size(); i++)
             {
-                img[y][x][0] = 255;
-                img[y][x][1] = 0;
-                img[y][x][2] = 0;
+                HitRecord temp_hit;
+                if (world[i]->hit(ray, temp_hit) && temp_hit.baryCoords[2] < min_t)
+                {
+                    min_t = temp_hit.baryCoords[2];
+                    any_hit = true;
+                    hit = temp_hit;
+                }
+            }
+
+            if (any_hit)
+            {
+                if (std::pow(std::pow(0.5 - hit.baryCoords[0], 2) + std::pow(0.5 - hit.baryCoords[1], 2), 0.5) < 0.4)
+                {
+                    img[y][x][0] = 255;
+                    img[y][x][1] = 0;
+                    img[y][x][2] = 0;
+                }
+                else
+                {
+                    img[y][x][0] = 0;
+                    img[y][x][1] = 0;
+                    img[y][x][2] = 255;
+                }
             }
             else
             {
@@ -54,7 +77,7 @@ void work(std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> 
 
 int main()
 {
-    // to compile:  g++ -I eigen-3.4.0 src_cpp/main.cpp
+    // to compile:  g++ -I eigen-3.4.0 -pthread src_cpp/main.cpp
     // to run:      ./a.out
     Timer timer;
     const int img_width = 1920;
@@ -64,11 +87,12 @@ int main()
     const int num_threads = 16;
     std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
 
-    const Vector3d pov = Vector3d(400, 400, 0);
+    const Vector3d pov = Vector3d(400, 400, 200);
     const Vector3d look_point = Vector3d(0, 0, 0);
     const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
     const D6Dice dice = D6Dice(Vector3d(0, 0, 0), 50);
-    const std::vector<const Hittable *> world = {&dice};
+    const D6Dice dice2 = D6Dice(Vector3d(100, 0, 0), 50);
+    const std::vector<const Hittable *> world = {&dice, &dice2};
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -87,7 +111,7 @@ int main()
     my_file << "P3\n"
             << img_width << " " << img_height << "\n255\n";
 
-    for (int y = img_height - 1; y >= 0; y--)
+    for (int y = 0; y < img_height; y++)
     {
         for (int x = 0; x < img_width; x++)
         {
