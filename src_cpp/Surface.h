@@ -4,14 +4,15 @@
 using Eigen::Matrix3d;
 using Eigen::Vector3d;
 
-class Surface {
+class Surface
+{
 public:
     Vector3d origin;
     Vector3d vec1;
     Vector3d vec2;
     Vector3d normal;
     Matrix3d a;
-    Surface() { }
+    Surface() {}
     Surface(Vector3d origin, Vector3d vec1, Vector3d vec2)
     {
         this->origin = origin;
@@ -23,7 +24,7 @@ public:
         a = a.inverse().eval();
     }
 
-    bool getBarycentricCoordinates(Ray ray, HitRecord& hit)
+    bool getBarycentricCoordinates(Ray ray, HitRecord &hit) const
     {
         // plug parametric equation of the ray into the implicit equation of the surface (plane) and
         // get t
@@ -31,7 +32,8 @@ public:
 
         // if t is <= 0, that means the ray didn't hit the surface (only a ray with negative
         // direction of ours would have hit it)
-        if (t > 0) {
+        if (t > 0)
+        {
             // get barycentric coordinates of the point of intersection, by solving linear equation
             // origin + vec1 * lambda + vec2 * mu = point of intersection
             hit.baryCoords = a * (ray.call(t) - this->origin);
@@ -43,19 +45,18 @@ public:
     }
 };
 
-class RectangularSurface : public Hittable {
+class RectangularSurface : public Hittable
+{
 public:
     Surface surf;
-    RectangularSurface() { }
+    RectangularSurface() {}
     RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2)
     {
         this->surf = Surface(origin, vec1, vec2);
     }
 
-    bool hit(const Ray& ray, HitRecord& hit) override
+    bool hit(const Ray &ray, HitRecord &hit) const override
     {
-        return this->surf.getBarycentricCoordinates(ray, hit)
-            && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0
-                || hit.baryCoords[1] > 1);
+        return this->surf.getBarycentricCoordinates(ray, hit) && !(hit.baryCoords[0] < 0 || hit.baryCoords[0] > 1 || hit.baryCoords[1] < 0 || hit.baryCoords[1] > 1);
     }
 };

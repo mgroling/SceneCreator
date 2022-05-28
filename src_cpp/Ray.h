@@ -2,7 +2,8 @@
 
 using Eigen::Vector3d;
 
-class Ray {
+class Ray
+{
 public:
     Vector3d origin;
     Vector3d direction;
