@@ -24,7 +24,7 @@ public:
         a = a.inverse().eval();
     }
 
-    bool getBarycentricCoordinates(Ray ray, HitRecord &hit) const
+    bool getBarycentricCoordinates(const Ray &ray, HitRecord &hit) const
     {
         // plug parametric equation of the ray into the implicit equation of the surface (plane) and
         // get t

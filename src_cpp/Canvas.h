@@ -8,9 +8,9 @@ public:
     Vector3d origin;
     Vector3d vec1;
     Vector3d vec2;
-    Canvas(const Vector3d pov, const Vector3d look_point, const double canvas_distance,
-           const double img_width, const double img_height, const double canvas_width,
-           const double canvas_height)
+    Canvas(Vector3d pov, Vector3d look_point, double canvas_distance,
+           double img_width, double img_height, double canvas_width,
+           double canvas_height)
     {
         // create a plane that is perpendicular to the view vector and use it as canvas
         Vector3d u = look_point - pov;
@@ -23,7 +23,7 @@ public:
         this->origin = this->origin - this->vec1 * img_width / 2 - this->vec2 * img_height / 2;
     }
 
-    Vector3d call(const double u, const double v) const
+    Vector3d call(double u, double v) const
     {
         return this->origin + this->vec1 * u + this->vec2 * v;
     }

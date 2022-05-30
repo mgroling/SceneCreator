@@ -9,7 +9,7 @@ class D6Dice : public Hittable
 public:
     RectangularSurface surfs[6];
     D6Dice() {}
-    D6Dice(const Vector3d center, const double size)
+    D6Dice(Vector3d center, double size)
     {
         Vector3d vertices[8] = {
             Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),
