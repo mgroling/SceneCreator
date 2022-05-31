@@ -1,5 +1,6 @@
 #include "Canvas.h"
 #include "Dice.h"
+#include "Texture.h"
 
 #include "Eigen/Dense"
 #include <fstream>
@@ -80,44 +81,45 @@ int main()
     // to compile:  g++ -I eigen-3.4.0 -pthread src_cpp/main.cpp
     // to run:      ./a.out
     Timer timer;
-    const int img_width = 1920;
-    const int img_height = 1080;
-    const int canvas_width = 192;
-    const int canvas_height = 108;
-    const int num_threads = 16;
-    std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
+    Texture tex = Texture("textures/img.ppm");
+    // const int img_width = 1920;
+    // const int img_height = 1080;
+    // const int canvas_width = 192;
+    // const int canvas_height = 108;
+    // const int num_threads = 16;
+    // std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
 
-    const Vector3d pov = Vector3d(400, 400, 200);
-    const Vector3d look_point = Vector3d(0, 0, 0);
-    const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
-    const D6Dice dice = D6Dice(Vector3d(0, 0, 0), 50);
-    const D6Dice dice2 = D6Dice(Vector3d(100, 0, 0), 50);
-    const std::vector<const Hittable *> world = {&dice, &dice2};
+    // const Vector3d pov = Vector3d(400, 400, 200);
+    // const Vector3d look_point = Vector3d(0, 0, 0);
+    // const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
+    // const D6Dice dice = D6Dice(Vector3d(0, 0, 0), 50);
+    // const D6Dice dice2 = D6Dice(Vector3d(100, 0, 0), 50);
+    // const std::vector<const Hittable *> world = {&dice, &dice2};
 
-    std::vector<std::thread> threads;
-    threads.reserve(num_threads);
-    for (int i = 0; i < num_threads; i++)
-    {
-        threads.emplace_back(work<img_width, img_height>, std::ref(img), std::ref(world), std::ref(pov), std::ref(canvas), i, num_threads);
-    }
+    // std::vector<std::thread> threads;
+    // threads.reserve(num_threads);
+    // for (int i = 0; i < num_threads; i++)
+    // {
+    //     threads.emplace_back(work<img_width, img_height>, std::ref(img), std::ref(world), std::ref(pov), std::ref(canvas), i, num_threads);
+    // }
 
-    for (int i = 0; i < num_threads; i++)
-    {
-        threads[i].join();
-    }
+    // for (int i = 0; i < num_threads; i++)
+    // {
+    //     threads[i].join();
+    // }
 
-    std::ofstream my_file;
-    my_file.open("pic.ppm");
-    my_file << "P3\n"
-            << img_width << " " << img_height << "\n255\n";
+    // std::ofstream my_file;
+    // my_file.open("pic.ppm");
+    // my_file << "P3\n"
+    //         << img_width << " " << img_height << "\n255\n";
 
-    for (int y = 0; y < img_height; y++)
-    {
-        for (int x = 0; x < img_width; x++)
-        {
-            my_file << +img[y][x][0] << " " << +img[y][x][1] << " " << +img[y][x][2] << "\n";
-        }
-    }
-    my_file.close();
-    return 0;
+    // for (int y = 0; y < img_height; y++)
+    // {
+    //     for (int x = 0; x < img_width; x++)
+    //     {
+    //         my_file << +img[y][x][0] << " " << +img[y][x][1] << " " << +img[y][x][2] << "\n";
+    //     }
+    // }
+    // my_file.close();
+    // return 0;
 }
