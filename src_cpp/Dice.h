@@ -4,47 +4,29 @@
 
 using Eigen::Vector3d;
 
-class D6Dice : public Hittable
+// creates a six-sided dice with side-length size and center as its center
+// all surfaces are then pushed to world
+void createD6Dice(Vector3d center, double size, std::vector<const Hittable *> &world)
 {
-public:
-    RectangularSurface surfs[6];
-    D6Dice() {}
-    D6Dice(Vector3d center, double size)
-    {
-        Vector3d vertices[8] = {
-            Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),
-            Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] - size / 2),
-            Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] - size / 2),
-            Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] - size / 2),
-            Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] + size / 2),
-            Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] + size / 2),
-            Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] + size / 2),
-            Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] + size / 2),
-        };
+    Vector3d vertices[8] = {
+        Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),
+        Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] - size / 2),
+        Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] - size / 2),
+        Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] - size / 2),
+        Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] + size / 2),
+        Vector3d(center[0] + size / 2, center[1] - size / 2, center[2] + size / 2),
+        Vector3d(center[0] - size / 2, center[1] + size / 2, center[2] + size / 2),
+        Vector3d(center[0] + size / 2, center[1] + size / 2, center[2] + size / 2),
+    };
 
-        int surface_groups[6][3] = {{7, 6, 5}, {0, 1, 4}, {7, 5, 3}, {7, 6, 3}, {0, 2, 4}, {0, 1, 2}};
-        for (int i = 0; i < 6; i++)
-        {
-            this->surfs[i] = RectangularSurface(vertices[surface_groups[i][0]],
-                                                vertices[surface_groups[i][1]] - vertices[surface_groups[i][0]],
-                                                vertices[surface_groups[i][2]] - vertices[surface_groups[i][0]]);
-        }
-    }
-
-    bool hit(const Ray &ray, HitRecord &hit) const override
+    int surface_groups[6][3] = {{7, 6, 5}, {0, 1, 4}, {7, 5, 3}, {7, 6, 3}, {0, 2, 4}, {0, 1, 2}};
+    std::string tex_path = "textures/img.ppm";
+    for (int i = 0; i < 6; i++)
     {
-        double min_t = INFINITY;
-        bool any_hit = false;
-        for (int i = 0; i < 6; i++)
-        {
-            HitRecord temp;
-            if (this->surfs[i].hit(ray, temp) && temp.baryCoords[2] < min_t)
-            {
-                min_t = temp.baryCoords[2];
-                hit = temp;
-                any_hit = true;
-            }
-        }
-        return any_hit;
+        world.push_back(new RectangularSurface(vertices[surface_groups[i][0]],
+                                               vertices[surface_groups[i][1]] - vertices[surface_groups[i][0]],
+                                               vertices[surface_groups[i][2]] - vertices[surface_groups[i][0]],
+                                               tex_path, [](double u, double v)
+                                               { return std::array<double, 2>{u, v}; }));
     }
 };

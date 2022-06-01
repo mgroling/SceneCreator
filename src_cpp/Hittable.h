@@ -1,5 +1,6 @@
 #ifndef Hittable_H
 #define Hittable_H
+
 #include "Eigen/Dense"
 #include "Ray.h"
 
@@ -19,6 +20,8 @@ class Hittable
 {
 public:
     virtual bool hit(const Ray &ray, HitRecord &hit) const = 0;
+
+    virtual std::array<uint8_t, 3> color(const Ray &ray, const HitRecord &hit) const = 0;
 };
 
 #endif

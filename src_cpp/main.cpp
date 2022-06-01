@@ -28,9 +28,11 @@ struct Timer
     }
 };
 
+// work function for threads that executes raycasting
+// (all hittable objects are checked and the one hit with minimal distance is asked for a color value), if none are hit the background color is assigned
 template <int img_width, int img_height>
 void work(std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> &img, const std::vector<const Hittable *> &world,
-          const Vector3d &pov, const Canvas &canvas, const int thread_id, const int num_threads)
+          const Vector3d &pov, const Canvas &canvas, const int thread_id, const int &num_threads)
 {
     for (int y = 0; y < img_height; y++)
     {
@@ -39,38 +41,27 @@ void work(std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> 
             Ray ray = Ray(pov, (canvas.call(x, y) - pov).normalized());
             HitRecord hit;
             double min_t = INFINITY;
-            bool any_hit = false;
+            const Hittable *obj_hit = NULL;
             for (int i = 0; i < world.size(); i++)
             {
                 HitRecord temp_hit;
                 if (world[i]->hit(ray, temp_hit) && temp_hit.baryCoords[2] < min_t)
                 {
                     min_t = temp_hit.baryCoords[2];
-                    any_hit = true;
                     hit = temp_hit;
+                    obj_hit = world[i];
                 }
             }
 
-            if (any_hit)
+            if (obj_hit)
             {
-                if (std::pow(std::pow(0.5 - hit.baryCoords[0], 2) + std::pow(0.5 - hit.baryCoords[1], 2), 0.5) < 0.4)
-                {
-                    img[y][x][0] = 255;
-                    img[y][x][1] = 0;
-                    img[y][x][2] = 0;
-                }
-                else
-                {
-                    img[y][x][0] = 0;
-                    img[y][x][1] = 0;
-                    img[y][x][2] = 255;
-                }
+                img[y][x] = obj_hit->color(ray, hit);
             }
             else
             {
-                img[y][x][0] = 0;
-                img[y][x][1] = 255;
-                img[y][x][2] = 0;
+                img[y][x][0] = 100;
+                img[y][x][1] = 100;
+                img[y][x][2] = 100;
             }
         }
     }
@@ -81,45 +72,44 @@ int main()
     // to compile:  g++ -I eigen-3.4.0 -pthread src_cpp/main.cpp
     // to run:      ./a.out
     Timer timer;
-    Texture tex = Texture("textures/img.ppm");
-    // const int img_width = 1920;
-    // const int img_height = 1080;
-    // const int canvas_width = 192;
-    // const int canvas_height = 108;
-    // const int num_threads = 16;
-    // std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
+    const int img_width = 960;
+    const int img_height = 540;
+    const int canvas_width = 192;
+    const int canvas_height = 108;
+    const int num_threads = 16; // for maximum performance this should be equal to your number of cpus
+    std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
 
-    // const Vector3d pov = Vector3d(400, 400, 200);
-    // const Vector3d look_point = Vector3d(0, 0, 0);
-    // const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
-    // const D6Dice dice = D6Dice(Vector3d(0, 0, 0), 50);
-    // const D6Dice dice2 = D6Dice(Vector3d(100, 0, 0), 50);
-    // const std::vector<const Hittable *> world = {&dice, &dice2};
+    const Vector3d pov = Vector3d(400, 400, 200);
+    const Vector3d look_point = Vector3d(0, 0, 0);
+    const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
+    std::vector<const Hittable *> world;
+    world.reserve(6);
+    createD6Dice(Vector3d(0, 0, 0), 50, world);
 
-    // std::vector<std::thread> threads;
-    // threads.reserve(num_threads);
-    // for (int i = 0; i < num_threads; i++)
-    // {
-    //     threads.emplace_back(work<img_width, img_height>, std::ref(img), std::ref(world), std::ref(pov), std::ref(canvas), i, num_threads);
-    // }
+    std::vector<std::thread> threads;
+    threads.reserve(num_threads);
+    for (int i = 0; i < num_threads; i++)
+    {
+        threads.emplace_back(work<img_width, img_height>, std::ref(img), std::ref(world), std::ref(pov), std::ref(canvas), i, std::ref(num_threads));
+    }
 
-    // for (int i = 0; i < num_threads; i++)
-    // {
-    //     threads[i].join();
-    // }
+    for (int i = 0; i < num_threads; i++)
+    {
+        threads[i].join();
+    }
 
-    // std::ofstream my_file;
-    // my_file.open("pic.ppm");
-    // my_file << "P3\n"
-    //         << img_width << " " << img_height << "\n255\n";
+    std::ofstream my_file;
+    my_file.open("pic.ppm");
+    my_file << "P3\n"
+            << img_width << " " << img_height << "\n255\n";
 
-    // for (int y = 0; y < img_height; y++)
-    // {
-    //     for (int x = 0; x < img_width; x++)
-    //     {
-    //         my_file << +img[y][x][0] << " " << +img[y][x][1] << " " << +img[y][x][2] << "\n";
-    //     }
-    // }
-    // my_file.close();
-    // return 0;
+    for (int y = 0; y < img_height; y++)
+    {
+        for (int x = 0; x < img_width; x++)
+        {
+            my_file << +img[y][x][0] << " " << +img[y][x][1] << " " << +img[y][x][2] << "\n";
+        }
+    }
+    my_file.close();
+    return 0;
 }

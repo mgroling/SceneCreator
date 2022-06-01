@@ -1,3 +1,6 @@
+#ifndef Texture_H
+#define Texture_H
+
 #include <array>
 #include <string>
 #include <fstream>
@@ -30,7 +33,8 @@ public:
 
     // reads .ppm file (with P3 encoding + values between 0 and 255) with given path and stores it in an array (height, width , 3)
     // for performance reasons the array is flattened
-    Texture(std::string path)
+    Texture() {}
+    Texture(const std::string &path)
     {
         std::ifstream file(path);
         std::string line;
@@ -56,14 +60,22 @@ public:
         }
     }
 
-    ~Texture()
-    {
-        delete[] image;
-    }
+    // for some reason this gets called even though it shouldn't, resulting in fragments in the image
+    // ~Texture()
+    // {
+    //     if (image)
+    //     {
+    //         delete[] image;
+    //     }
+    //     std::cout << "texture destructor called\n";
+    // }
 
     // access elements like it was a 3-dimensional array
-    uint8_t accessElement(int y, int x, int c)
+    std::array<uint8_t, 3> accessElement(int y, int x) const
     {
-        return image[y * width * 3 + x * 3 + c];
+        int index = y * width * 3 + x * 3;
+        return {image[index], image[index + 1], image[index + 2]};
     }
 };
+
+#endif

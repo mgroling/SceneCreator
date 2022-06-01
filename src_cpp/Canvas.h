@@ -2,6 +2,7 @@
 
 using Eigen::Vector3d;
 
+// canvas (or camera) that can be used to paint/take a picture of a scenery
 class Canvas
 {
 public:
