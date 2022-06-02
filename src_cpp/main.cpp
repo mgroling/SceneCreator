@@ -87,8 +87,7 @@ int main()
     Texture tex = Texture("textures/img.ppm");
     map_func temp_map = [](double u, double v)
     { return std::array<double, 2>{u, v}; };
-    std::array<map_func, 6> mapping_funcs = {temp_map, temp_map, temp_map, temp_map, temp_map, temp_map};
-    createD6Dice(Vector3d(0, 0, 0), 50, std::array<Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
+    createD6Dice(Vector3d(0, 0, 0), 50, Vector3d(0, 0, 0), std::array<Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
                  std::array<map_func, 6>{temp_map, temp_map, temp_map, temp_map, temp_map, temp_map}, world);
 
     std::vector<std::thread> threads;

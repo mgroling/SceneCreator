@@ -14,10 +14,10 @@ It is tested with g++ 9.4.0 on Ubuntu 20.04.
 
 - Basic ray-casting + virtual objects
 - Parallelization of ray-casting procedure
+- Textures for objects
 
 ## Planned Features
 
 - Lighting
-- Textures for objects
 - Different types of materials for objects to support reflectiveness etc.
 - Rotation of objects
