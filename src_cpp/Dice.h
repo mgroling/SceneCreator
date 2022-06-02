@@ -1,14 +1,13 @@
 #include "Eigen/Dense"
 #include "Surface.h"
 #include <math.h>
-#include <iostream>
 
 using Eigen::Vector3d;
 
 // creates a six-sided dice with side-length size and center as its center
 // all surfaces are then pushed to world
-void createD6Dice(Vector3d center, double size, Vector3d rotation, std::array<Texture *, 6> textures,
-                  std::array<map_func, 6> mapping_functions, std::vector<const Hittable *> &world)
+void createD6Dice(Vector3d center, double size, Vector3d rotation, const std::array<const Texture *, 6> &textures,
+                  const std::array<const map_func, 6> &mapping_functions, std::vector<const Hittable *> &world)
 {
     Vector3d vertices[8] = {
         Vector3d(center[0] - size / 2, center[1] - size / 2, center[2] - size / 2),

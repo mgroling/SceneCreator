@@ -72,23 +72,24 @@ int main()
     // to compile:  g++ -I eigen-3.4.0 -pthread src_cpp/main.cpp
     // to run:      ./a.out
     Timer timer;
-    const int img_width = 960;
-    const int img_height = 540;
+    const int img_width = 1920;  // 960;
+    const int img_height = 1080; // 540;
     const int canvas_width = 192;
     const int canvas_height = 108;
+    const int canvas_distance = 400;
     const int num_threads = 16; // for maximum performance this should be equal to your number of cpus
     std::array<std::array<std::array<uint8_t, 3>, img_width>, img_height> img;
 
     const Vector3d pov = Vector3d(400, 400, 200);
     const Vector3d look_point = Vector3d(0, 0, 0);
-    const Canvas canvas = Canvas(pov, look_point, 400, img_width, img_height, canvas_width, canvas_height);
+    const Canvas canvas = Canvas(pov, look_point, canvas_distance, img_width, img_height, canvas_width, canvas_height);
     std::vector<const Hittable *> world;
     world.reserve(6);
     Texture tex = Texture("textures/img.ppm");
-    map_func temp_map = [](double u, double v)
+    const map_func temp_map = [](double u, double v)
     { return std::array<double, 2>{u, v}; };
-    createD6Dice(Vector3d(0, 0, 0), 50, Vector3d(0, 0, 0), std::array<Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
-                 std::array<map_func, 6>{temp_map, temp_map, temp_map, temp_map, temp_map, temp_map}, world);
+    createD6Dice(Vector3d(0, 0, 0), 50, Vector3d(0, 0, 0), std::array<const Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
+                 std::array<const map_func, 6>{temp_map, temp_map, temp_map, temp_map, temp_map, temp_map}, world);
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);

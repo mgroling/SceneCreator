@@ -5,7 +5,6 @@
 #include "Ray.h"
 
 using Eigen::Vector3d;
-using Eigen::Vector3i;
 
 class HitRecord
 {

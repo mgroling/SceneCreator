@@ -58,17 +58,16 @@ public:
                 image[index + 2] = std::stoi(s[2]);
             }
         }
+        file.close();
     }
 
-    // for some reason this gets called even though it shouldn't, resulting in fragments in the image
-    // ~Texture()
-    // {
-    //     if (image)
-    //     {
-    //         delete[] image;
-    //     }
-    //     std::cout << "texture destructor called\n";
-    // }
+    ~Texture()
+    {
+        if (image)
+        {
+            delete[] image;
+        }
+    }
 
     // access elements like it was a 3-dimensional array
     std::array<uint8_t, 3> accessElement(int y, int x) const
