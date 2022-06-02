@@ -51,7 +51,7 @@ public:
             for (int x = 0; x < width; x++)
             {
                 std::getline(file, line);
-                int index = x * 3 + y * width * 3;
+                int index = x * 3 + (height - 1 - y) * width * 3;
                 s = split(line, ' ');
                 image[index] = std::stoi(s[0]);
                 image[index + 1] = std::stoi(s[1]);

@@ -39,5 +39,5 @@ def createImageWithText(
 
 if __name__ == "__main__":
     createImageWithText(
-        "textures/img.ppm", 100, 100, 50, (0, 0, 0), (244, 164, 96), "δ"
+        "textures/img.ppm", 200, 200, 100, (0, 0, 0), (244, 164, 96), "δ"
     )

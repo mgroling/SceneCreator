@@ -5,7 +5,7 @@
 using Eigen::Matrix3d;
 using Eigen::Vector3d;
 
-typedef std::array<double, 2> (*map_func)(double u, double v);
+typedef std::function<std::array<double, 2>(double, double)> map_func;
 
 // a surface object (plane might be more fitting)
 class Surface
@@ -53,14 +53,14 @@ class RectangularSurface : public Hittable
 {
 public:
     Surface surf;
-    Texture tex;
+    Texture *tex;
     map_func func;
     // origin, vec1 and vec2 are used to position the plane
     // func is used to map from barycentric coordinates to image coordinates (image loaded with texture_path) (should be in [0, 1])
-    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2, const std::string &texture_path, map_func func)
+    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2, Texture *tex, map_func func)
     {
         this->surf = Surface(origin, vec1, vec2);
-        this->tex = Texture(texture_path);
+        this->tex = tex;
         this->func = func;
     }
 
@@ -72,7 +72,7 @@ public:
 
     std::array<uint8_t, 3> color(const Ray &ray, const HitRecord &hit) const override
     {
-        std::array<double, 2> temp = this->func(hit.baryCoords[0], hit.baryCoords[1]);
-        return this->tex.accessElement((int)(temp[1] * tex.height), (int)(temp[0] * tex.width));
+        std::array<double, 2> temp = (this->func)(hit.baryCoords[0], hit.baryCoords[1]);
+        return this->tex->accessElement((int)(temp[1] * tex->height), (int)(temp[0] * tex->width));
     }
 };
