@@ -1,5 +1,5 @@
 #include "Canvas.h"
-#include "Dice.h"
+#include "Objects.h"
 #include "Texture.h"
 
 #include "Eigen/Dense"
@@ -88,8 +88,8 @@ int main()
     Texture tex = Texture("textures/img.ppm");
     const map_func temp_map = [](double u, double v)
     { return std::array<double, 2>{u, v}; };
-    createD6Dice(Vector3d(0, 0, 0), 50, Vector3d(0, 0, 0), std::array<const Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
-                 std::array<const map_func, 6>{temp_map, temp_map, temp_map, temp_map, temp_map, temp_map}, world);
+    createRectangularPrism(Vector3d(0, 0, 0), Vector3d(50, 50, 50), Vector3d(0, 0, 0), std::array<const Texture *, 6>{&tex, &tex, &tex, &tex, &tex, &tex},
+                           std::array<const map_func, 6>{temp_map, temp_map, temp_map, temp_map, temp_map, temp_map}, world);
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
