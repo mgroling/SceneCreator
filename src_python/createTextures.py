@@ -38,6 +38,9 @@ def createImageWithText(
 
 
 if __name__ == "__main__":
-    createImageWithText(
-        "textures/img.ppm", 200, 200, 100, (0, 0, 0), (244, 164, 96), "δ"
+    # createImageWithText(
+    #     "textures/img.ppm", 200, 200, 100, (0, 0, 0), (244, 164, 96), "δ"
+    # )
+    saveImgPPM3(
+        "textures/wood_texture.ppm", np.array(Image.open("textures/wood_texture.jpg"))
     )

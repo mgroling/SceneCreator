@@ -18,7 +18,7 @@ public:
     Surface(Vector3d origin, Vector3d vec1, Vector3d vec2)
     {
         this->origin = origin;
-        this->normal = vec1.cross(vec2);
+        this->normal = (vec1.cross(vec2)).normalized();
         a << vec1[0], vec2[0], -this->normal[0], vec1[1], vec2[1],
             -this->normal[1], vec1[2], vec2[2], -this->normal[2];
         a = a.inverse().eval();
@@ -38,6 +38,7 @@ public:
             hit.baryCoords = a * (ray.call(t) - origin);
             hit.baryCoords[2] = t;
             hit.normal = normal;
+            hit.point = ray.call(t);
             return true;
         }
         return false;

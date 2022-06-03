@@ -11,6 +11,7 @@ class HitRecord
 public:
     Vector3d baryCoords;
     Vector3d normal;
+    Vector3d point;
 
     HitRecord() {}
 };
