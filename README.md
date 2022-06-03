@@ -13,7 +13,7 @@ It is tested with g++ 9.4.0 on Ubuntu 20.04.
 ## Currently Implemented Features
 
 - Basic ray-casting + virtual objects
-- Parallelization of ray-casting procedure
+- Parallelization of ray-casting procedure (CPU)
 - Textures for objects
 
 ## Planned Features
