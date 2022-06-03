@@ -15,9 +15,9 @@ It is tested with g++ 9.4.0 on Ubuntu 20.04.
 - Basic ray-casting + virtual objects
 - Parallelization of ray-casting procedure (CPU)
 - Textures for objects
+- Rotation of objects
 
 ## Planned Features
 
 - Lighting
 - Different types of materials for objects to support reflectiveness etc.
-- Rotation of objects
