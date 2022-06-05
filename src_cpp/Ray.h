@@ -10,7 +10,7 @@ public:
     Ray(Vector3d ray_origin, Vector3d ray_direction)
     {
         origin = ray_origin;
-        direction = ray_direction;
+        direction = ray_direction.normalized();
     }
 
     Vector3d call(double t) const { return origin + direction * t; }

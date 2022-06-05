@@ -60,6 +60,16 @@ public:
         }
         file.close();
     }
+    // constructor for 1 color Texture
+    Texture(uint8_t r, uint8_t g, uint8_t b)
+    {
+        width = 1;
+        height = 1;
+        image = new uint8_t[3];
+        image[0] = r;
+        image[1] = g;
+        image[2] = b;
+    }
 
     ~Texture()
     {

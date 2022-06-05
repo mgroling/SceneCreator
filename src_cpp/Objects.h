@@ -9,7 +9,7 @@ using Eigen::Vector3d;
 // the sides are ordered like this: top, front, right, back, left, bottom
 // all surfaces are then pushed to world
 void createRectangularPrism(Vector3d center, Vector3d size, Vector3d rotation, const std::array<const Texture *, 6> &textures,
-                            const std::array<const map_func, 6> &mapping_functions, std::vector<const Hittable *> &world)
+                            const std::array<const map_func, 6> &mapping_functions, std::vector<const Hittable *> &world, bool ignoreLight)
 {
     Vector3d vertices[8] = {
         Vector3d(center[0] - size[0] / 2, center[1] - size[1] / 2, center[2] - size[2] / 2),
@@ -34,6 +34,6 @@ void createRectangularPrism(Vector3d center, Vector3d size, Vector3d rotation, c
         world.push_back(new RectangularSurface(vertices[surface_groups[i][0]],
                                                vertices[surface_groups[i][1]] - vertices[surface_groups[i][0]],
                                                vertices[surface_groups[i][2]] - vertices[surface_groups[i][0]],
-                                               textures[i], mapping_functions[i]));
+                                               textures[i], mapping_functions[i], ignoreLight));
     }
 };

@@ -9,9 +9,10 @@ using Eigen::Vector3d;
 class HitRecord
 {
 public:
-    Vector3d baryCoords;
-    Vector3d normal;
-    Vector3d point;
+    Vector3d baryCoords; // the first two are the barycentric coordinates and the last one is the t (of the ray that hit it)
+    Vector3d normal;     // the surface normal
+    Vector3d point;      // the point that was hit
+    bool ignoreLight;    // if this object should be ignored for lighting purposes (its the source itself or is transparent)
 
     HitRecord() {}
 };

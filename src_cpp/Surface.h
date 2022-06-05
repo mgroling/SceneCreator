@@ -14,14 +14,16 @@ public:
     Vector3d origin;
     Vector3d normal;
     Matrix3d a;
+    bool ignoreLight;
     Surface() {}
-    Surface(Vector3d origin, Vector3d vec1, Vector3d vec2)
+    Surface(Vector3d origin, Vector3d vec1, Vector3d vec2, bool ignoreLight)
     {
         this->origin = origin;
         this->normal = (vec1.cross(vec2)).normalized();
         a << vec1[0], vec2[0], -this->normal[0], vec1[1], vec2[1],
             -this->normal[1], vec1[2], vec2[2], -this->normal[2];
         a = a.inverse().eval();
+        this->ignoreLight = ignoreLight;
     }
 
     bool getBarycentricCoordinates(const Ray &ray, HitRecord &hit) const
@@ -39,6 +41,7 @@ public:
             hit.baryCoords[2] = t;
             hit.normal = normal;
             hit.point = ray.call(t);
+            hit.ignoreLight = ignoreLight;
             return true;
         }
         return false;
@@ -54,9 +57,9 @@ public:
     map_func func;
     // origin, vec1 and vec2 are used to position the plane
     // func is used to map from barycentric coordinates to image coordinates (image loaded with texture_path) (should be in [0, 1])
-    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2, const Texture *tex, const map_func &func)
+    RectangularSurface(Vector3d origin, Vector3d vec1, Vector3d vec2, const Texture *tex, const map_func &func, bool ignoreLight)
     {
-        surf = Surface(origin, vec1, vec2);
+        surf = Surface(origin, vec1, vec2, ignoreLight);
         this->tex = tex;
         this->func = func;
     }

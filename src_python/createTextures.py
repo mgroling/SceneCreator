@@ -5,7 +5,7 @@ from typing import Tuple
 
 def saveImgPPM3(path: str, img: np.ndarray):
     with open(path, "w+") as f:
-        f.write("P3\n{} {}\n255\n".format(img.shape[0], img.shape[1]))
+        f.write("P3\n{} {}\n255\n".format(img.shape[1], img.shape[0]))
         temp = [
             "{} {} {}\n".format(*elem)
             for elem in img.reshape((img.shape[0] * img.shape[1], 3))
@@ -39,8 +39,13 @@ def createImageWithText(
 
 if __name__ == "__main__":
     # createImageWithText(
-    #     "textures/img.ppm", 200, 200, 100, (0, 0, 0), (244, 164, 96), "δ"
+    #     "textures/img.ppm", 500, 500, 300, (0, 0, 0), (244, 164, 96), "δ"
     # )
+    img = np.array(Image.open("textures/wall.jpg"))
+    img = img[:, :533]
+    print(img.shape)
+
     saveImgPPM3(
-        "textures/wood_texture.ppm", np.array(Image.open("textures/wood_texture.jpg"))
+        "textures/wall.ppm",
+        img,
     )
